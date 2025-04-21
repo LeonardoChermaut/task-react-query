@@ -1,0 +1,44 @@
+{
+  "tasks": [
+    {
+      "title": "Implementar o Fake DB ",
+      "description": "Utilizar o JSON Server ou outros metodos.",
+      "status": "COMPLETED",
+      "priority": "MEDIUM",
+      "dueDate": "2025-04-21",
+      "id": "1"
+    },
+    {
+      "title": "Implementar o TailwindCSS na aplicação",
+      "description": "Utilizar estritamente o Tailwind para estilizar os componentes.",
+      "status": "COMPLETED",
+      "priority": "HIGH",
+      "dueDate": "2025-04-21",
+      "id": "2"
+    },
+    {
+      "title": "Implementar Testes de componentes",
+      "description": "Utilizar o Cypress para os testes unitários.",
+      "status": "PENDING",
+      "priority": "MEDIUM",
+      "dueDate": "2025-04-21",
+      "id": "3"
+    },
+    {
+      "title": "Implementar React Query na Aplicação",
+      "description": "Utilizar o hook para integrar as chamadas da camada Service pelo Fake Api JSON Server",
+      "status": "COMPLETED",
+      "priority": "HIGH",
+      "dueDate": "2025-04-21",
+      "id": "4"
+    },
+    {
+      "id": 5,
+      "title": "Adicionar as imagens de fallback no server-side",
+      "description": "Incluir uma pasta na aplicação com as imagens, ao invés de utilizar via HTTPS no src de <img>",
+      "status": "PENDING",
+      "priority": "LOW",
+      "dueDate": "2025-04-21"
+    }
+  ]
+}

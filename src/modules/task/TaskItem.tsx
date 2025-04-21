@@ -45,9 +45,7 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
   return (
     <li className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
       <div className="flex flex-1 items-start gap-3">
-        {/* Conteúdo principal */}
         <div className="flex flex-col flex-grow gap-2 min-w-0">
-          {/* Linha do título e status */}
           <div className="flex items-baseline gap-2">
             <h3 className="flex-shrink-0 font-medium text-gray-900 dark:text-white truncate">
               {task.title}
@@ -67,7 +65,6 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
             </span>
           </div>
 
-          {/* Descrição */}
           {task.description && (
             <div className="flex">
               <p className="text-sm text-gray-600 dark:text-gray-300 font-light line-clamp-2">
@@ -76,7 +73,6 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
             </div>
           )}
 
-          {/* Metadados */}
           <div className="flex flex-wrap gap-4 text-xs text-gray-500 dark:text-gray-400">
             <div className="flex items-center gap-1 flex-shrink-0">
               {
@@ -101,7 +97,6 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
           </div>
         </div>
 
-        {/* Menu de ações */}
         <div className="flex flex-shrink-0">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

@@ -100,7 +100,6 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
       {filteredTasks.length === 0 ? (
         <div className="p-8 text-center justify-center align-center div flex flex-col items-center">
           <img
-            // adicione uma imagem de placeholder aqui
             src="https://cdn-icons-png.flaticon.com/512/5058/5058432.png"
             alt="Nenhuma tarefa"
             className="opacity-50 w-30 h-30"

@@ -1,7 +1,7 @@
 import { TaskManager } from "@/modules/task/TaskManager.tsx";
 import { FC } from "react";
 
-export const Home: FC = () => {
+export const HomePage: FC = () => {
   return (
     <main
       id="main-home-page"

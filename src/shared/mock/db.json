@@ -19,7 +19,7 @@
     {
       "title": "Implementar Testes de componentes",
       "description": "Utilizar o Cypress para os testes unitários.",
-      "status": "PENDING",
+      "status": "IN_PROGRESS",
       "priority": "MEDIUM",
       "dueDate": "2025-04-21",
       "id": "3"
@@ -33,7 +33,7 @@
       "id": "4"
     },
     {
-      "id": 5,
+      "id": "5",
       "title": "Adicionar as imagens de fallback no server-side",
       "description": "Incluir uma pasta na aplicação com as imagens, ao invés de utilizar via HTTPS no src de <img>",
       "status": "PENDING",

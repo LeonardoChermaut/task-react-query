@@ -61,3 +61,13 @@ export const useDeleteTask = () => {
     },
   });
 };
+
+export const useReactQueryClient = () => {
+  return {
+    useDeleteTask,
+    useUpdateTask,
+    useCreateTask,
+    useTaskById,
+    useTasks,
+  };
+};

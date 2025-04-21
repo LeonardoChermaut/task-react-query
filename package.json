@@ -11,12 +11,16 @@
     "preview": "vite preview"
   },
   "devDependencies": {
+    "@cypress/react": "^9.0.1",
+    "@cypress/vite-dev-server": "^6.0.3",
+    "@cypress/webpack-dev-server": "^4.0.2",
     "@radix-ui/react-dropdown-menu": "^2.1.11",
     "@tailwindcss/postcss": "^4.1.4",
     "@testing-library/cypress": "^10.0.3",
     "@types/cypress": "^1.1.6",
     "@types/react": "^19.1.2",
     "@types/react-dom": "^19.1.2",
+    "@types/react-router-dom": "^5.3.3",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
     "@vitejs/plugin-react": "^4.4.0",

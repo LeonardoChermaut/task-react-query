@@ -5,7 +5,7 @@ import {
   TaskStatus,
 } from "@/shared/interface/interface.js";
 import { Filter } from "lucide-react";
-import { FunctionComponent, useMemo, useState } from "react";
+import { FunctionComponent, useState } from "react";
 import { TaskItem } from "./TaskItem.tsx";
 
 type TaskListProps = {
@@ -28,9 +28,7 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
     "ALL"
   );
 
-  const data = useMemo<ITask[]>(() => {
-    return tasks?.length > 0 ? tasks : ([] as ITask[]);
-  }, [tasks]);
+  const data: ITask[] = tasks?.length > 0 ? tasks : [];
 
   const filteredTasks = data.filter((task) => {
     const matchesStatus =
@@ -42,11 +40,39 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
   });
 
   if (isLoading) {
-    return <p className="p-4">Carregando tarefas...</p>;
+    return (
+      <div className="flex justify-center items-center p-8">
+        <p
+          className="dark:text-gray-400 pt-4 text-center pt-4 pb-4 pr-4
+          text-gray-500 font-bold"
+        >
+          Carregando tarefas...
+        </p>
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/1477/1477009.png"
+          alt="Carregando..."
+          className="opacity-50 w-5 h-5 animate-spin"
+        />
+      </div>
+    );
   }
 
   if (isError) {
-    return <p className="p-4 text-red-500">Erro ao carregar tarefas.</p>;
+    return (
+      <div className="flex justify-center items-center p-8 flex-col">
+        <p
+          className="dark:text-gray-400 pt-4 text-center pb-9
+          text-gray-500 font-bold"
+        >
+          Erro ao carregar tarefas.
+        </p>
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/675/675564.png"
+          alt="Erro ao carregar tarefas"
+          className="opacity-50 w-30 h-30 animate-bounce"
+        />
+      </div>
+    );
   }
 
   return (
@@ -70,7 +96,9 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
             <select
               id="status-filter"
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value as TaskStatus)}
+              onChange={({ target: { value: status } }) =>
+                setStatusFilter(status as TaskStatus)
+              }
               className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
             >
               <option value="ALL">Todos</option>
@@ -90,8 +118,8 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
             <select
               id="priority-filter"
               value={priorityFilter}
-              onChange={(e) =>
-                setPriorityFilter(e.target.value as TaskPriority)
+              onChange={({ target: { value: priority } }) =>
+                setPriorityFilter(priority as TaskPriority)
               }
               className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
             >

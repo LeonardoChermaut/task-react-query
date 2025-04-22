@@ -1,7 +1,7 @@
 import { useCreateTask, useTasks, useUpdateTask } from "@/shared/hook/hook.js";
 import { ITask } from "@/shared/interface/interface.js";
 import { Save, X } from "lucide-react";
-import { ChangeEvent, FormEvent, FunctionComponent, useState } from "react";
+import { FormEvent, FunctionComponent, useRef } from "react";
 
 type TaskFormProps = {
   task?: ITask;
@@ -12,51 +12,35 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
   onCancel,
   task,
 }) => {
-  const [formData, setFormData] = useState<Omit<ITask, "id">>(
-    task
-      ? {
-          title: task.title,
-          description: task.description,
-          status: task.status,
-          priority: task.priority,
-          dueDate: task.dueDate,
-        }
-      : ({
-          title: "",
-          description: "",
-          status: "PENDING",
-          priority: "MEDIUM",
-          dueDate: "",
-        } as const)
-  );
-
   const { data } = useTasks();
   const { mutate: createTask } = useCreateTask();
   const { mutate: updateTask } = useUpdateTask();
 
   const tasks: ITask[] = data || [];
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
-  ) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
-  };
+  const formRef = useRef<HTMLFormElement>(null);
 
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
 
+    if (!formRef.current) {
+      return;
+    }
+
+    const formData = new FormData(formRef?.current);
+    const data: Omit<ITask, "id"> = {
+      title: formData.get("title") as string,
+      description: formData.get("description") as string,
+      status: formData.get("status") as ITask["status"],
+      priority: formData.get("priority") as ITask["priority"],
+      dueDate: formData.get("dueDate") as string,
+    };
+
     if (task) {
-      updateTask({
-        id: task.id,
-        data: formData,
-      });
+      updateTask({ id: task.id, data });
     } else {
-      const newId = (Number(tasks[tasks?.length - 1].id) + 1).toString();
-      createTask({
-        id: newId || "1",
-        ...formData,
-      });
+      const newId = (Number(tasks.at(-1)?.id || 0) + 1).toString();
+      createTask({ id: newId, ...data });
     }
 
     onCancel();
@@ -78,6 +62,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
 
       <form
         onSubmit={handleSubmit}
+        ref={formRef}
         className="flex flex-col bg-white dark:bg-gray-800 rounded-2xl shadow-xl p-8 transition-all duration-300"
       >
         <div className="flex flex-col gap-6">
@@ -92,8 +77,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
               type="text"
               id="title"
               name="title"
-              value={formData?.title}
-              onChange={handleChange}
+              defaultValue={task?.title || ""}
               required
               placeholder="Digite o título da tarefa"
               className="flex w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -110,8 +94,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
             <textarea
               id="description"
               name="description"
-              value={formData?.description}
-              onChange={handleChange}
+              defaultValue={task?.description || ""}
               required
               rows={3}
               placeholder="Descreva a tarefa"
@@ -130,8 +113,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
               <select
                 id="status"
                 name="status"
-                value={formData?.status}
-                onChange={handleChange}
+                defaultValue={task?.status || "PENDING"}
                 required
                 className="flex w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
@@ -151,9 +133,8 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
               <select
                 id="priority"
                 name="priority"
-                value={formData?.priority}
+                defaultValue={task?.priority || "LOW"}
                 required
-                onChange={handleChange}
                 className="flex w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="LOW">Baixa</option>
@@ -173,9 +154,8 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
                 type="date"
                 id="dueDate"
                 name="dueDate"
+                defaultValue={task?.dueDate || ""}
                 required
-                value={formData?.dueDate}
-                onChange={handleChange}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               />
             </div>

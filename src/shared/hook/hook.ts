@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   ICreateTaskPayload,
   ITask,
@@ -6,10 +11,15 @@ import {
 } from "../interface/interface.js";
 import { taskService } from "../service/service.js";
 
-export const useTasks = () => {
+export const useTasks = (
+  page: number,
+  limit: number,
+  filters?: { status?: string; priority?: string }
+) => {
   return useQuery({
-    queryKey: ["tasks"],
-    queryFn: () => taskService.getAll(),
+    queryKey: ["tasks", "paginated", page, limit, filters],
+    queryFn: () => taskService.getPaginated(page, limit, filters),
+    placeholderData: keepPreviousData,
   });
 };
 
@@ -60,14 +70,4 @@ export const useDeleteTask = () => {
       queryClient.invalidateQueries({ queryKey: ["tasks"] });
     },
   });
-};
-
-export const useReactQueryClient = () => {
-  return {
-    useDeleteTask,
-    useUpdateTask,
-    useCreateTask,
-    useTaskById,
-    useTasks,
-  };
 };

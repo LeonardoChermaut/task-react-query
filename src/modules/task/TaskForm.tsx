@@ -30,9 +30,11 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
         } as const)
   );
 
-  const { data: tasks } = useTasks();
+  const { data } = useTasks();
   const { mutate: createTask } = useCreateTask();
   const { mutate: updateTask } = useUpdateTask();
+
+  const tasks: ITask[] = data || [];
 
   const handleChange = (
     e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
@@ -50,8 +52,9 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
         data: formData,
       });
     } else {
+      const newId = (Number(tasks[tasks?.length - 1].id) + 1).toString();
       createTask({
-        id: tasks?.length ? Number(tasks[tasks.length - 1].id) + 1 : 1,
+        id: newId || "1",
         ...formData,
       });
     }
@@ -109,6 +112,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
               name="description"
               value={formData?.description}
               onChange={handleChange}
+              required
               rows={3}
               placeholder="Descreva a tarefa"
               className="flex w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
@@ -128,6 +132,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
                 name="status"
                 value={formData?.status}
                 onChange={handleChange}
+                required
                 className="flex w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
                 <option value="PENDING">Pendente</option>
@@ -147,6 +152,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
                 id="priority"
                 name="priority"
                 value={formData?.priority}
+                required
                 onChange={handleChange}
                 className="flex w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-sm text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"
               >
@@ -167,6 +173,7 @@ export const TaskForm: FunctionComponent<TaskFormProps> = ({
                 type="date"
                 id="dueDate"
                 name="dueDate"
+                required
                 value={formData?.dueDate}
                 onChange={handleChange}
                 className="w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-4 py-2 text-gray-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-emerald-500"

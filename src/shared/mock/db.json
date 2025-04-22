@@ -47,6 +47,22 @@
       "status": "COMPLETED",
       "priority": "MEDIUM",
       "dueDate": "2025-04-22"
+    },
+    {
+      "id": "7",
+      "title": "Corrigir chamada e requisição dos metodos PUT e DELETE",
+      "description": "Ajustar o tipo da tarefa do tipo number para o tipo string",
+      "status": "COMPLETED",
+      "priority": "LOW",
+      "dueDate": "2025-04-22"
+    },
+    {
+      "id": "8",
+      "title": "efefef",
+      "description": "ergegeg",
+      "status": "PENDING",
+      "priority": "MEDIUM",
+      "dueDate": "2025-04-22"
     }
   ]
 }

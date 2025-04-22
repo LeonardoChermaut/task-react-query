@@ -116,10 +116,7 @@ export class TaskService {
     }
   }
 
-  async update(
-    id: number | string,
-    updates: IUpdateTaskPayload
-  ): Promise<ITask> {
+  async update(id: string, updates: IUpdateTaskPayload): Promise<ITask> {
     try {
       const response = await fetch(`${this.BASE_URL}/${id}`, {
         method: "PUT",
@@ -137,7 +134,7 @@ export class TaskService {
     }
   }
 
-  async delete(id: number | string): Promise<ITask> {
+  async delete(id: string): Promise<ITask> {
     try {
       const response = await fetch(`${this.BASE_URL}/${id}`, {
         method: "DELETE",

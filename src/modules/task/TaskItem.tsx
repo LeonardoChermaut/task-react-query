@@ -4,7 +4,6 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/dropdown-menu.js";
-import { useDeleteTask } from "@/shared/hook/hook.js";
 import { ITask } from "@/shared/interface/interface.js";
 import { formatDate } from "@/shared/utils/utils.js";
 import { AlertTriangle, Clock, Edit, MoreVertical, Trash2 } from "lucide-react";
@@ -13,7 +12,7 @@ import { FunctionComponent } from "react";
 type TaskItemProps = {
   task: ITask;
   onEdit: (task: ITask) => void;
-  onDelete: (id: number | string) => void;
+  onDelete: (id: string) => void;
 };
 
 const taskStatusMappedClasses = {
@@ -35,13 +34,6 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
   onEdit,
   onDelete,
 }) => {
-  const { mutate: deleteTask } = useDeleteTask();
-
-  const handleDelete = (id: number | string) => {
-    deleteTask(id);
-    onDelete(id);
-  };
-
   return (
     <li className="p-4 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors">
       <div className="flex flex-1 items-start gap-3">
@@ -121,7 +113,7 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
                 </span>
               </DropdownMenuItem>
               <DropdownMenuItem
-                onClick={() => handleDelete(task.id.toString())}
+                onClick={() => onDelete(task.id)}
                 className="flex items-center gap-2 text-red-600 dark:text-red-400 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors"
               >
                 <Trash2 size={16} />

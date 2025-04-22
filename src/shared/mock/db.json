@@ -55,14 +55,6 @@
       "status": "COMPLETED",
       "priority": "LOW",
       "dueDate": "2025-04-22"
-    },
-    {
-      "id": "8",
-      "title": "efefef",
-      "description": "ergegeg",
-      "status": "PENDING",
-      "priority": "MEDIUM",
-      "dueDate": "2025-04-22"
     }
   ]
 }

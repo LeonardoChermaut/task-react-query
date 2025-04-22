@@ -30,36 +30,34 @@ export const PaginatedTaskList: FunctionComponent<PaginatedTaskListProps> = ({
         isError={isError}
       />
 
-      <div className="flex justify-center items-center gap-4 mt-8">
+      <div className="flex justify-center items-center gap-4 p-8">
         <button
           onClick={handlePreviousPage}
           disabled={page === 1}
-          className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md transition
+          className={`flex items-center gap-1 px-2 py-1 text-xs rounded-xl transition-colors
       ${
         page === 1
           ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
-          : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          : "bg-white dark:bg-gray-900 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-gray-800 border border-emerald-200"
       }`}
         >
           <ChevronLeft size={16} />
-          Anterior
         </button>
 
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Página <span className="font-semibold ">{page}</span>
+          Página {page}
         </span>
 
         <button
           onClick={handleNextPage}
           disabled={(tasks?.length || 0) < TASKS_PER_PAGE}
-          className={`flex items-center gap-2 px-4 py-2 text-sm rounded-md transition
+          className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-xl transition-colors
       ${
         (tasks?.length || 0) < TASKS_PER_PAGE
-          ? "bg-gray-100 dark:bg-gray-800 text-emerald-500 cursor-not-allowed"
-          : "bg-gray-100 dark:bg-gray-800 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+          ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
+          : "bg-white dark:bg-gray-900 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-gray-800 border border-emerald-200"
       }`}
         >
-          Próxima
           <ChevronRight size={16} />
         </button>
       </div>

@@ -15,6 +15,16 @@ export interface ITaskListResponse {
   tasks: ITask[];
 }
 
+export interface ITaskPaginatedResponse {
+  tasks: ITask[];
+  total: number;
+}
+
+export interface ITaskFilters {
+  status?: TaskStatus;
+  priority?: TaskPriority;
+}
+
 export interface ICreateTaskPayload extends ITask {}
 
 export interface IUpdateTaskPayload extends Partial<Omit<ITask, "id">> {}

@@ -1,4 +1,4 @@
-import { useDeleteTask, useTasks } from "@/shared/hook/hook.js";
+import { useDeleteTask } from "@/shared/hook/hook.js";
 import {
   ITask,
   TaskPriority,
@@ -9,11 +9,18 @@ import { FunctionComponent, useMemo, useState } from "react";
 import { TaskItem } from "./TaskItem.tsx";
 
 type TaskListProps = {
+  tasks?: ITask[];
+  isLoading?: boolean;
+  isError?: boolean;
   onEdit: (task: ITask) => void;
 };
 
-export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
-  const { data, isLoading, isError } = useTasks();
+export const TaskList: FunctionComponent<TaskListProps> = ({
+  tasks,
+  isLoading,
+  isError,
+  onEdit,
+}) => {
   const { mutate: deleteTask } = useDeleteTask();
 
   const [statusFilter, setStatusFilter] = useState<TaskStatus | "ALL">("ALL");
@@ -21,11 +28,11 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     "ALL"
   );
 
-  const tasks = useMemo<ITask[]>(() => {
-    return data?.length > 0 ? data : ([] as ITask[]);
-  }, [data]);
+  const data = useMemo<ITask[]>(() => {
+    return tasks?.length > 0 ? tasks : ([] as ITask[]);
+  }, [tasks]);
 
-  const filteredTasks = tasks.filter((task) => {
+  const filteredTasks = data.filter((task) => {
     const matchesStatus =
       statusFilter === "ALL" || task.status === statusFilter;
     const matchesPriority =

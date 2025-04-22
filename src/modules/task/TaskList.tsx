@@ -122,7 +122,7 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
               key={task.id}
               task={task}
               onEdit={onEdit}
-              onDelete={(id) => deleteTask(id)}
+              onDelete={() => deleteTask(task.id)}
             />
           ))}
         </ul>

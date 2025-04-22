@@ -1,4 +1,4 @@
-import { useTasks } from "@/shared/hook/hook.js";
+import { useTaskPaginated } from "@/shared/hook/hook.js";
 import { ITask } from "@/shared/interface/interface.js";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FunctionComponent, useState } from "react";
@@ -18,7 +18,7 @@ export const PaginatedTaskList: FunctionComponent<PaginatedTaskListProps> = ({
 }) => {
   const [page, setPage] = useState<number>(pagination.page);
   const [perPage, setPerPage] = useState<number>(pagination.perPage);
-  const { data, isLoading, isError } = useTasks(page, perPage);
+  const { data, isLoading, isError } = useTaskPaginated(page, perPage);
 
   const tasks: ITask[] = data?.tasks || [];
 

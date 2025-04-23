@@ -41,12 +41,12 @@
       "dueDate": "2025-04-21"
     },
     {
-      "id": "6",
       "title": "Implementação de paginação ",
       "description": "Implementar a paginação na aplicação utilizando o React Query",
       "status": "COMPLETED",
       "priority": "MEDIUM",
-      "dueDate": "2025-04-22"
+      "dueDate": "2025-04-22",
+      "id": "6"
     },
     {
       "id": "7",
@@ -63,6 +63,22 @@
       "priority": "HIGH",
       "dueDate": "2025-04-22",
       "id": "8"
+    },
+    {
+      "title": "Separação dos componentes para Reusabilidade e Semantica",
+      "description": "- Separar o filtro em um componente separado\n- Criar um componente de Paginação Global\n- Criar um hook de controle da paginação",
+      "status": "COMPLETED",
+      "priority": "MEDIUM",
+      "dueDate": "2025-04-22",
+      "id": "9"
+    },
+    {
+      "title": "Implementação Modal para evitar peder a paginação.",
+      "description": "Criar um componente model para chamar TaskForm e não perder a paginação ao atualizar ou criar.",
+      "status": "COMPLETED",
+      "priority": "LOW",
+      "dueDate": "2025-04-22",
+      "id": "10"
     }
   ]
 }

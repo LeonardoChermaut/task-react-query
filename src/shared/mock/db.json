@@ -71,6 +71,14 @@
       "priority": "MEDIUM",
       "dueDate": "2025-04-22",
       "id": "9"
+    },
+    {
+      "title": "Implementação Modal para evitar peder a paginação.",
+      "description": "Criar um componente model para chamar TaskForm e não perder a paginação ao atualizar ou criar.",
+      "status": "COMPLETED",
+      "priority": "LOW",
+      "dueDate": "2025-04-22",
+      "id": "10"
     }
   ]
 }

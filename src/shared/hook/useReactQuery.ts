@@ -64,10 +64,17 @@ export const useUpdateTask = () => {
   return useMutation({
     mutationFn: ({ id, data }: { id: string; data: IUpdateTaskPayload }) =>
       taskService.update(id, data),
-    onSuccess: (updatedTask) => {
-      queryClient.setQueryData(queryKeys.tasks.all, (old: ITask[] = []) =>
-        old.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-      );
+    onSuccess: () => {
+      queryClient.invalidateQueries({
+        queryKey: queryKeys.tasks.all,
+        refetchType: "active",
+        exact: false,
+      });
+    },
+    onError: (_, __, context: { previousTasks?: ITask[] } | undefined) => {
+      if (context?.previousTasks) {
+        queryClient.setQueryData(queryKeys.tasks.all, context.previousTasks);
+      }
     },
   });
 };

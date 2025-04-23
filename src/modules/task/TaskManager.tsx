@@ -1,3 +1,4 @@
+import { Dialog } from "@/components/Dialog.tsx";
 import { ITask } from "@/shared/interface/interface.js";
 import { PlusCircle } from "lucide-react";
 import { FunctionComponent, useState } from "react";
@@ -5,16 +6,16 @@ import { TaskForm } from "./TaskForm.tsx";
 import { TaskList } from "./TaskList.tsx";
 
 export const TaskManager: FunctionComponent = () => {
-  const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-  const [editingTask, setEditingTask] = useState<ITask>(null);
+  const [openTaskForm, setOpenTaskForm] = useState<boolean>(false);
+  const [editingTask, setEditingTask] = useState<ITask | null>(null);
 
   const handleEdit = (task: ITask) => {
     setEditingTask(task);
-    setIsFormOpen(true);
+    setOpenTaskForm(true);
   };
 
   const handleCloseForm = () => {
-    setIsFormOpen(false);
+    setOpenTaskForm(false);
     setEditingTask(null);
   };
 
@@ -30,7 +31,7 @@ export const TaskManager: FunctionComponent = () => {
         <button
           onClick={() => {
             setEditingTask(null);
-            setIsFormOpen(true);
+            setOpenTaskForm(true);
           }}
           className="flex items-center gap-2 bg-emerald-500 hover:bg-emerald-600 text-white px-4 py-2 rounded-lg transition-colors"
         >
@@ -39,8 +40,11 @@ export const TaskManager: FunctionComponent = () => {
         </button>
       </div>
 
-      {isFormOpen && <TaskForm onCancel={handleCloseForm} task={editingTask} />}
-      {!isFormOpen && <TaskList onEdit={handleEdit} />}
+      <Dialog isOpen={openTaskForm}>
+        <TaskForm onCancel={handleCloseForm} task={editingTask} />
+      </Dialog>
+
+      <TaskList onEdit={handleEdit} />
     </main>
   );
 };

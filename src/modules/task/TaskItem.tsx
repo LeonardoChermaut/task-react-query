@@ -3,7 +3,7 @@ import {
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/dropdown-menu.js";
+} from "@/components/DropdownMenu.tsx";
 import { ITask } from "@/shared/interface/interface.js";
 import { formatDate } from "@/shared/utils/utils.js";
 import { AlertTriangle, Clock, Edit, MoreVertical, Trash2 } from "lucide-react";
@@ -59,7 +59,7 @@ export const TaskItem: FunctionComponent<TaskItemProps> = ({
 
           {task.description && (
             <div className="flex">
-              <p className="text-sm text-gray-600 dark:text-gray-300 font-light line-clamp-2">
+              <p className="text-start text-sm text-gray-600 dark:text-gray-300 font-light line-clamp-2">
                 {task.description}
               </p>
             </div>

@@ -16,6 +16,7 @@ export class TaskService {
     if (!TaskService.instance) {
       TaskService.instance = new TaskService();
     }
+
     return TaskService.instance;
   }
 
@@ -28,6 +29,7 @@ export class TaskService {
         }`
       );
     }
+
     return response.json();
   }
 
@@ -37,6 +39,7 @@ export class TaskService {
         method: "GET",
         headers: this.headers,
       });
+
       return this.handleResponse<ITask[]>(response);
     } catch (error) {
       throw new Error(
@@ -66,10 +69,10 @@ export class TaskService {
         headers: this.headers,
       });
 
-      const { data: tasks } = await this.handleResponse<{ data: ITask[] }>(
-        response
-      );
-      const total = Number(response.headers.get("X-Total-Count")) || 0;
+      const { data: tasks, items: total } = await this.handleResponse<{
+        items: number;
+        data: ITask[];
+      }>(response);
 
       return { tasks, total };
     } catch (error) {

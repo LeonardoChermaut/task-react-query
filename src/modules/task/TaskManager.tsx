@@ -1,16 +1,21 @@
 import { ITask } from "@/shared/interface/interface.js";
 import { PlusCircle } from "lucide-react";
 import { FunctionComponent, useState } from "react";
-import { PaginatedTaskList } from "./PaginatedTaskList.tsx.tsx";
 import { TaskForm } from "./TaskForm.tsx";
+import { TaskList } from "./TaskList.tsx";
 
 export const TaskManager: FunctionComponent = () => {
   const [isFormOpen, setIsFormOpen] = useState<boolean>(false);
-  const [editingTask, setEditingTask] = useState<ITask | null>(null);
+  const [editingTask, setEditingTask] = useState<ITask>(null);
 
   const handleEdit = (task: ITask) => {
     setEditingTask(task);
     setIsFormOpen(true);
+  };
+
+  const handleCloseForm = () => {
+    setIsFormOpen(false);
+    setEditingTask(null);
   };
 
   return (
@@ -34,17 +39,8 @@ export const TaskManager: FunctionComponent = () => {
         </button>
       </div>
 
-      {isFormOpen ? (
-        <TaskForm
-          onCancel={() => {
-            setIsFormOpen(false);
-            setEditingTask(null);
-          }}
-          task={editingTask}
-        />
-      ) : (
-        <PaginatedTaskList onEdit={handleEdit} />
-      )}
+      {isFormOpen && <TaskForm onCancel={handleCloseForm} task={editingTask} />}
+      {!isFormOpen && <TaskList onEdit={handleEdit} />}
     </main>
   );
 };

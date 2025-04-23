@@ -8,8 +8,8 @@ import {
   ICreateTaskPayload,
   ITask,
   IUpdateTaskPayload,
-} from "../interface/interface.js";
-import { taskService } from "../service/service.js";
+} from "../interface/interface.ts";
+import { taskService } from "../service/service.ts";
 
 export const queryKeys = {
   tasks: {

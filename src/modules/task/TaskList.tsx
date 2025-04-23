@@ -1,51 +1,59 @@
-import { useDeleteTask } from "@/shared/hook/hook.js";
+import { PaginationControls } from "@/components/PaginationControls.tsx";
+import { useDeleteTask } from "@/shared/hook/useReactQuery.ts";
 import {
   ITask,
   TaskPriority,
   TaskStatus,
 } from "@/shared/interface/interface.js";
-import { Filter } from "lucide-react";
 import { FunctionComponent, useState } from "react";
+import { useTaskPagination } from "../../shared/hook/useTaskPagination.tsx";
+import { TaskFilter } from "./TaskFilter.tsx";
 import { TaskItem } from "./TaskItem.tsx";
 
 type TaskListProps = {
-  tasks?: ITask[];
-  isLoading?: boolean;
-  isError?: boolean;
   onEdit: (task: ITask) => void;
 };
 
-export const TaskList: FunctionComponent<TaskListProps> = ({
-  tasks,
-  isLoading,
-  isError,
-  onEdit,
-}) => {
-  const { mutate: deleteTask } = useDeleteTask();
+export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
+  const {
+    tasks: paginatedTasks,
+    currentPage,
+    perPage,
+    isLoading,
+    isError,
+    goToNextPage,
+    goToPrevPage,
+    changePerPage,
+    hasNextPage,
+  } = useTaskPagination();
 
   const [statusFilter, setStatusFilter] = useState<TaskStatus | "ALL">("ALL");
   const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "ALL">(
     "ALL"
   );
 
-  const data: ITask[] = tasks?.length > 0 ? tasks : [];
+  const { mutate: deleteTask } = useDeleteTask();
 
-  const filteredTasks = data.filter((task) => {
+  const data: ITask[] = paginatedTasks || [];
+  const tasks = data?.length > 0 ? data : [];
+
+  const filteredTasks = tasks.filter((task) => {
     const matchesStatus =
       statusFilter === "ALL" || task.status === statusFilter;
     const matchesPriority =
       priorityFilter === "ALL" || task.priority === priorityFilter;
-
     return matchesStatus && matchesPriority;
   });
+
+  const handlePageChange = (newPage: number) => {
+    if (newPage > currentPage) goToNextPage();
+    else if (newPage < currentPage) goToPrevPage();
+  };
 
   if (isLoading) {
     return (
       <div className="flex justify-center items-center p-8">
-        <p
-          className="dark:text-gray-400 pt-4 text-center pt-4 pb-4 pr-4
-          text-gray-500 font-bold"
-        >
+        <p className="dark:text-gray-400 text-center pb-4 pr-4 text-gray-500 font-bold">
           Carregando tarefas...
         </p>
         <img
@@ -60,10 +68,7 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
   if (isError) {
     return (
       <div className="flex justify-center items-center p-8 flex-col">
-        <p
-          className="dark:text-gray-400 pt-4 text-center pb-9
-          text-gray-500 font-bold"
-        >
+        <p className="dark:text-gray-400 text-center pb-9 text-gray-500 font-bold">
           Erro ao carregar tarefas.
         </p>
         <img
@@ -76,64 +81,16 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
   }
 
   return (
-    <div>
-      <div className="p-4 bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
-        <div className="flex flex-wrap gap-4 items-center">
-          <div className="flex items-center gap-1 flex-1">
-            <Filter size={16} className="text-gray-500 dark:text-gray-300" />
-            <span className="text-white text-gray-600 dark:text-gray-300">
-              Filtros:
-            </span>
-          </div>
+    <div className="flex flex-col h-full">
+      <TaskFilter
+        statusFilter={statusFilter}
+        priorityFilter={priorityFilter}
+        onStatusChange={setStatusFilter}
+        onPriorityChange={setPriorityFilter}
+      />
 
-          <div className="flex items-center gap-2">
-            <label
-              htmlFor="status-filter"
-              className="text-sm text-gray-600 dark:text-gray-300"
-            >
-              Status:
-            </label>
-            <select
-              id="status-filter"
-              value={statusFilter}
-              onChange={({ target: { value: status } }) =>
-                setStatusFilter(status as TaskStatus)
-              }
-              className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
-            >
-              <option value="ALL">Todos</option>
-              <option value="PENDING">Pendente</option>
-              <option value="IN_PROGRESS">Em Progresso</option>
-              <option value="COMPLETED">Concluída</option>
-            </select>
-          </div>
-
-          <div className="flex items-center gap-2">
-            <label
-              htmlFor="priority-filter"
-              className="text-sm text-gray-600 dark:text-gray-300"
-            >
-              Prioridade:
-            </label>
-            <select
-              id="priority-filter"
-              value={priorityFilter}
-              onChange={({ target: { value: priority } }) =>
-                setPriorityFilter(priority as TaskPriority)
-              }
-              className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
-            >
-              <option value="ALL">Todas</option>
-              <option value="HIGH">Alta</option>
-              <option value="MEDIUM">Média</option>
-              <option value="LOW">Baixa</option>
-            </select>
-          </div>
-        </div>
-      </div>
-
-      {filteredTasks.length === 0 ? (
-        <div className="p-8 text-center justify-center align-center div flex flex-col items-center">
+      {filteredTasks.length === 0 && (
+        <div className="flex-1 p-8 text-center flex flex-col items-center justify-center">
           <img
             src="https://cdn-icons-png.flaticon.com/512/5058/5058432.png"
             alt="Nenhuma tarefa"
@@ -143,18 +100,30 @@ export const TaskList: FunctionComponent<TaskListProps> = ({
             Nenhuma tarefa encontrada com os filtros selecionados.
           </p>
         </div>
-      ) : (
-        <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-          {filteredTasks.map((task) => (
-            <TaskItem
-              key={task.id}
-              task={task}
-              onEdit={onEdit}
-              onDelete={() => deleteTask(task.id)}
-            />
-          ))}
-        </ul>
       )}
+
+      {filteredTasks.length > 0 && (
+        <div className="flex-1 overflow-y-auto">
+          <ul className="divide-y divide-gray-200 dark:divide-gray-700">
+            {filteredTasks.map((task) => (
+              <TaskItem
+                key={task.id}
+                task={task}
+                onEdit={onEdit}
+                onDelete={() => deleteTask(task.id)}
+              />
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <PaginationControls
+        page={currentPage}
+        perPage={perPage}
+        hasNextPage={hasNextPage}
+        onPageChange={handlePageChange}
+        onPerPageChange={changePerPage}
+      />
     </div>
   );
 };

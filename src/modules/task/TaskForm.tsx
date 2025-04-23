@@ -1,4 +1,8 @@
-import { useCreateTask, useTasks, useUpdateTask } from "@/shared/hook/hook.js";
+import {
+  useCreateTask,
+  useTasks,
+  useUpdateTask,
+} from "@/shared/hook/useReactQuery.ts";
 import { ITask } from "@/shared/interface/interface.js";
 import { Save, X } from "lucide-react";
 import { FormEvent, FunctionComponent, useRef } from "react";

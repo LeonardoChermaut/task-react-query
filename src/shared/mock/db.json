@@ -63,6 +63,14 @@
       "priority": "HIGH",
       "dueDate": "2025-04-22",
       "id": "8"
+    },
+    {
+      "title": "Separação dos componentes para Reusabilidade e Semantica",
+      "description": "- Separar o filtro em um componente separado\n- Criar um componente de Paginação Global\n- Criar um hook de controle da paginação",
+      "status": "COMPLETED",
+      "priority": "MEDIUM",
+      "dueDate": "2025-04-22",
+      "id": "9"
     }
   ]
 }

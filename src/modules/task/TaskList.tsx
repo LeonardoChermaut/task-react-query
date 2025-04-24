@@ -1,12 +1,9 @@
 import { PaginationControls } from "@/components/PaginationControls.tsx";
 import { useDeleteTask } from "@/shared/hook/useReactQuery.ts";
+import { useTaskFilters } from "@/shared/hook/useTaskFilters.ts";
 import { useTaskPagination } from "@/shared/hook/useTaskPagination.ts";
-import {
-  ITask,
-  TaskPriority,
-  TaskStatus,
-} from "@/shared/interface/interface.js";
-import { FunctionComponent, useCallback, useEffect, useState } from "react";
+import { ITask } from "@/shared/interface/interface.js";
+import { FunctionComponent, useCallback, useEffect } from "react";
 import { TaskFilter } from "./TaskFilter.tsx";
 import { TaskItem } from "./TaskItem.tsx";
 
@@ -15,8 +12,7 @@ type TaskListProps = {
 };
 
 export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
-  const [statusFilter, setStatusFilter] = useState<TaskStatus>("ALL");
-  const [priorityFilter, setPriorityFilter] = useState<TaskPriority>("ALL");
+  const { mutate: deleteTask } = useDeleteTask();
 
   const {
     tasks: paginatedTasks,
@@ -31,7 +27,8 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     changePerPage,
   } = useTaskPagination();
 
-  const { mutate: deleteTask } = useDeleteTask();
+  const { statusFilter, setStatusFilter, priorityFilter, setPriorityFilter } =
+    useTaskFilters();
 
   const data: ITask[] = paginatedTasks || [];
   const tasks = data?.length > 0 ? data : [];
@@ -40,7 +37,6 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     const statusMatch = statusFilter === "ALL" || task.status === statusFilter;
     const priorityMatch =
       priorityFilter === "ALL" || task.priority === priorityFilter;
-
     return statusMatch && priorityMatch;
   });
 

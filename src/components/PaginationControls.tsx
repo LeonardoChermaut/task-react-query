@@ -2,32 +2,38 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 import { FunctionComponent } from "react";
 
 type PaginationControlsProps = {
-  page: number;
+  currentPage: number;
   perPage: number;
-  hasNextPage: boolean;
-  onPageChange: (newPage: number) => void;
+  totalPages: number;
+  onPageChange: (page: number) => void;
   onPerPageChange: (perPage: number) => void;
 };
 
-const perPageOptions = [5, 10, 15, 20];
+const perPageOptions = [5, 10, 15, 20] as const;
 
 export const PaginationControls: FunctionComponent<PaginationControlsProps> = ({
-  page,
+  currentPage,
   perPage,
-  hasNextPage,
+  totalPages,
   onPageChange,
   onPerPageChange,
 }) => {
+  const hasPrevPage = currentPage > 1;
+  const hasNextPage = currentPage < totalPages;
+
+  const handlePrevPage = () => onPageChange(currentPage - 1);
+  const handleNextPage = () => onPageChange(currentPage + 1);
+
   return (
     <div className="flex flex-wrap items-center gap-4 px-6 py-4">
       <div className="flex-grow" />
 
       <div className="flex items-center gap-3 mx-auto">
         <button
-          onClick={() => onPageChange(page - 1)}
-          disabled={page === 1}
+          onClick={handlePrevPage}
+          disabled={!hasPrevPage}
           className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-xl transition-colors ${
-            page === 1
+            !hasPrevPage
               ? "bg-gray-100 dark:bg-gray-800 text-gray-400 cursor-not-allowed"
               : "bg-white dark:bg-gray-900 text-emerald-600 hover:bg-emerald-50 dark:hover:bg-gray-800 border border-emerald-200"
           }`}
@@ -37,11 +43,11 @@ export const PaginationControls: FunctionComponent<PaginationControlsProps> = ({
         </button>
 
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
-          Página <span className="font-semibold">{page}</span>
+          Página <span className="font-semibold">{currentPage}</span>
         </span>
 
         <button
-          onClick={() => onPageChange(page + 1)}
+          onClick={handleNextPage}
           disabled={!hasNextPage}
           className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-xl transition-colors ${
             !hasNextPage

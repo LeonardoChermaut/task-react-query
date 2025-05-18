@@ -3,10 +3,10 @@ import { Filter } from "lucide-react";
 import { FunctionComponent } from "react";
 
 type TaskFilterProps = {
-  statusFilter: TaskStatus | "ALL";
-  priorityFilter: TaskPriority | "ALL";
-  onStatusChange: (status: TaskStatus | "ALL") => void;
-  onPriorityChange: (priority: TaskPriority | "ALL") => void;
+  statusFilter: TaskStatus;
+  priorityFilter: TaskPriority;
+  onStatusChange: (status: TaskStatus) => void;
+  onPriorityChange: (priority: TaskPriority) => void;
 };
 
 export const TaskFilter: FunctionComponent<TaskFilterProps> = ({
@@ -34,7 +34,7 @@ export const TaskFilter: FunctionComponent<TaskFilterProps> = ({
             id="status-filter"
             value={statusFilter}
             onChange={(e) =>
-              onStatusChange(e.target.value as TaskStatus | "ALL")
+              onStatusChange((e.target.value as TaskStatus) || "ALL")
             }
             className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
           >
@@ -56,7 +56,7 @@ export const TaskFilter: FunctionComponent<TaskFilterProps> = ({
             id="priority-filter"
             value={priorityFilter}
             onChange={(e) =>
-              onPriorityChange(e.target.value as TaskPriority | "ALL")
+              onPriorityChange((e.target.value as TaskPriority) || "ALL")
             }
             className="text-sm border border-gray-300 dark:border-gray-600 rounded-md px-2 py-1 bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-200"
           >

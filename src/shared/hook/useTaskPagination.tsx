@@ -37,17 +37,12 @@ export const useTaskPagination = (): UseTaskPaginationReturn => {
   const totalItems = tasksResponse?.total || 0;
   const totalPages = Math.ceil(totalItems / perPage);
 
-  const goToNextPage = () => {
-    if (page < totalPages) {
-      setPage((prev) => prev + 1);
-    }
-  };
+  const goToNextPage = () => setPage((p) => Math.min(p + 1, totalPages));
 
-  const goToPrevPage = () => {
-    if (page > 1) {
-      setPage((prev) => prev - 1);
-    }
-  };
+  const goToPrevPage = () => setPage((p) => Math.max(p - 1, 1));
+
+  const goToPage = (p: number) =>
+    setPage(() => Math.max(1, Math.min(p, totalPages)));
 
   const changePerPage = (newPerPage: number) => {
     setPerPage(newPerPage);
@@ -55,18 +50,18 @@ export const useTaskPagination = (): UseTaskPaginationReturn => {
   };
 
   return {
+    tasks: tasksResponse.tasks,
     currentPage: page,
     perPage,
     totalPages,
-    totalItems,
-    tasks: tasksResponse.tasks,
+    totalItems: tasksResponse.total,
     isLoading,
     isError,
     hasNextPage: page < totalPages,
     hasPrevPage: page > 1,
     goToNextPage,
     goToPrevPage,
-    setPage,
+    setPage: goToPage,
     changePerPage,
   };
 };

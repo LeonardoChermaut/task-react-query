@@ -1,13 +1,13 @@
-export type TaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED";
+export type TaskStatus = "PENDING" | "IN_PROGRESS" | "COMPLETED" | "ALL";
 
-export type TaskPriority = "LOW" | "MEDIUM" | "HIGH";
+export type TaskPriority = "LOW" | "MEDIUM" | "HIGH" | "ALL";
 
 export interface ITask {
   id: string;
   title: string;
   description: string;
-  status: TaskStatus;
-  priority: TaskPriority;
+  status: Omit<TaskStatus, "ALL">;
+  priority: Omit<TaskPriority, "ALL">;
   dueDate: string;
 }
 

@@ -5,7 +5,7 @@ import {
   TaskPriority,
   TaskStatus,
 } from "@/shared/interface/interface.js";
-import { FunctionComponent, useState } from "react";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { useTaskPagination } from "../../shared/hook/useTaskPagination.tsx";
 import { TaskFilter } from "./TaskFilter.tsx";
 import { TaskItem } from "./TaskItem.tsx";
@@ -21,16 +21,18 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     perPage,
     isLoading,
     isError,
+    totalItems,
+    totalPages,
     goToNextPage,
+    hasPrevPage,
     goToPrevPage,
     changePerPage,
     hasNextPage,
+    setPage,
   } = useTaskPagination();
 
-  const [statusFilter, setStatusFilter] = useState<TaskStatus | "ALL">("ALL");
-  const [priorityFilter, setPriorityFilter] = useState<TaskPriority | "ALL">(
-    "ALL"
-  );
+  const [statusFilter, setStatusFilter] = useState<TaskStatus>("ALL");
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority>("ALL");
 
   const { mutate: deleteTask } = useDeleteTask();
 
@@ -45,10 +47,23 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     return matchesStatus && matchesPriority;
   });
 
-  const handlePageChange = (newPage: number) => {
-    if (newPage > currentPage) goToNextPage();
-    else if (newPage < currentPage) goToPrevPage();
-  };
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      if (newPage > currentPage) goToNextPage();
+      else if (newPage < currentPage) goToPrevPage();
+    },
+    [currentPage, goToNextPage, goToPrevPage]
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      goToPrevPage();
+    } else if (currentPage < totalPages) {
+      goToNextPage();
+    } else {
+      setPage(currentPage);
+    }
+  }, [totalPages]);
 
   if (isLoading) {
     return (

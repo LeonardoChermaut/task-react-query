@@ -9,7 +9,7 @@ type PaginationControlsProps = {
   onPerPageChange: (perPage: number) => void;
 };
 
-const perPageOptions = [5, 10, 15, 20];
+const perPageOptions = [5, 10, 15, 20] as const;
 
 export const PaginationControls: FunctionComponent<PaginationControlsProps> = ({
   page,

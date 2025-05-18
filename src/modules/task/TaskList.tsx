@@ -1,9 +1,12 @@
 import { PaginationControls } from "@/components/PaginationControls.tsx";
 import { useDeleteTask } from "@/shared/hook/useReactQuery.ts";
-import { useTaskFilters } from "@/shared/hook/useTaskFilters.ts";
 import { useTaskPagination } from "@/shared/hook/useTaskPagination.ts";
-import { ITask } from "@/shared/interface/interface.js";
-import { FunctionComponent } from "react";
+import {
+  ITask,
+  TaskPriority,
+  TaskStatus,
+} from "@/shared/interface/interface.js";
+import { FunctionComponent, useCallback, useEffect, useState } from "react";
 import { TaskFilter } from "./TaskFilter.tsx";
 import { TaskItem } from "./TaskItem.tsx";
 
@@ -12,20 +15,26 @@ type TaskListProps = {
 };
 
 export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
-  const { mutate: deleteTask } = useDeleteTask();
+  const [statusFilter, setStatusFilter] = useState<TaskStatus>("ALL");
+  const [priorityFilter, setPriorityFilter] = useState<TaskPriority>("ALL");
 
   const {
-    tasks,
+    tasks: paginatedTasks,
     currentPage,
     perPage,
     isLoading,
     isError,
     totalPages,
-    handlePageChange,
-    handlePerPageChange,
+    goToNextPage,
+    goToPrevPage,
+    setPage,
+    changePerPage,
   } = useTaskPagination();
-  const { statusFilter, priorityFilter, setStatusFilter, setPriorityFilter } =
-    useTaskFilters();
+
+  const { mutate: deleteTask } = useDeleteTask();
+
+  const data: ITask[] = paginatedTasks || [];
+  const tasks = data?.length > 0 ? data : [];
 
   const filteredTasks = tasks.filter((task) => {
     const statusMatch = statusFilter === "ALL" || task.status === statusFilter;
@@ -34,6 +43,24 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
 
     return statusMatch && priorityMatch;
   });
+
+  const handlePageChange = useCallback(
+    (newPage: number) => {
+      if (newPage > currentPage) goToNextPage();
+      else if (newPage < currentPage) goToPrevPage();
+    },
+    [currentPage, goToNextPage, goToPrevPage]
+  );
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      goToPrevPage();
+    } else if (currentPage < totalPages) {
+      goToNextPage();
+    } else {
+      setPage(currentPage);
+    }
+  }, [totalPages]);
 
   if (isLoading) {
     return (
@@ -107,7 +134,7 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
         perPage={perPage}
         totalPages={totalPages}
         onPageChange={handlePageChange}
-        onPerPageChange={handlePerPageChange}
+        onPerPageChange={changePerPage}
       />
     </div>
   );

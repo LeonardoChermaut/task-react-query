@@ -22,6 +22,7 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     isError,
     totalPages,
     goToNextPage,
+    hasPrevPage,
     goToPrevPage,
     setPage,
     changePerPage,

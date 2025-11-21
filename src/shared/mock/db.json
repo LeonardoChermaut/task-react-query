@@ -59,7 +59,7 @@
     {
       "title": "Implementar Persistencia via Url Query Params",
       "description": "Refatorar o componente PaginatedTaskList para manter o estado da página atual ao editar uma tarefa. Anteriormente, ao fechar o formulário de edição (TaskForm), o componente era remontado e o número da página era redefinido para 1.",
-      "status": "PENDING",
+      "status": "COMPLETED",
       "priority": "HIGH",
       "dueDate": "2025-04-22",
       "id": "8"

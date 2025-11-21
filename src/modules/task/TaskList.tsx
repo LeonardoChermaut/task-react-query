@@ -1,6 +1,6 @@
 import { PaginationControls } from "@/components/PaginationControls.tsx";
 import { useDeleteTask } from "@/shared/hook/useReactQuery.ts";
-import { useTaskPaginationLogic } from "@/shared/hook/useTaskPaginationLogic.ts";
+import { useTaskPagination } from "@/shared/hook/useTaskPagination.ts";
 import { useTaskUrlParams } from "@/shared/hook/useTaskUrlParams.ts";
 import { ITask } from "@/shared/interface/interface.js";
 import { FunctionComponent, useEffect } from "react";
@@ -22,7 +22,7 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     setPriorityFilter,
   } = useTaskUrlParams();
 
-  const { tasks, metadata, isLoading, isError } = useTaskPaginationLogic(params);
+  const { tasks, metadata, isLoading, isError } = useTaskPagination(params);
 
   const { currentPage, totalPages } = metadata;
 

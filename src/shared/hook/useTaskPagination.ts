@@ -1,66 +1,47 @@
-import { useTaskPaginated } from "@/shared/hook/useReactQuery.ts";
-import { ITask, ITaskPaginatedResponse } from "@/shared/interface/interface.ts";
-import { useState } from "react";
-
-const pagination = {
-  page: 1,
-  perPage: 5,
-} as const;
-
-type UseTaskPaginationReturn = {
-  tasks: ITask[];
+import { useTaskPaginated } from "./useReactQuery.ts";
+import { TaskUrlParams } from "./useTaskUrlParams.ts";
+export interface PaginationMetadata {
   currentPage: number;
   perPage: number;
   totalPages: number;
   totalItems: number;
-  isLoading: boolean;
-  isError: boolean;
   hasNextPage: boolean;
-  hasPrevPage: boolean;
-  goToNextPage: () => void;
-  goToPrevPage: () => void;
-  setPage: (page: number) => void;
-  changePerPage: (perPage: number) => void;
-};
+  hasPreviousPage: boolean;
+}
 
-export const useTaskPagination = (filters?: { status?: string; priority?: string }): UseTaskPaginationReturn => {
-  const [page, setPage] = useState<number>(pagination.page);
-  const [perPage, setPerPage] = useState<number>(pagination.perPage);
-
-  const { data, isLoading, isError } = useTaskPaginated(page, perPage, filters);
-
-  const tasksResponse: ITaskPaginatedResponse = data || {
-    tasks: [],
-    total: 0,
+export const useTaskPagination = (params: TaskUrlParams) => {
+  const { page, perPage, status, priority } = params;
+  const filters = {
+    ...(status !== "ALL" && { status }),
+    ...(priority !== "ALL" && { priority }),
   };
 
-  const totalItems = tasksResponse?.total || 0;
-  const totalPages = Math.ceil(totalItems / perPage);
+  const { data, isLoading, isError } = useTaskPaginated(
+    page,
+    perPage,
+    Object.keys(filters).length > 0 ? filters : undefined
+  );
 
-  const goToNextPage = () => setPage((p) => Math.min(p + 1, totalPages));
+  const tasks = data?.tasks ?? [];
+  const totalItems = data?.total ?? 0;
 
-  const goToPrevPage = () => setPage((p) => Math.max(p - 1, 1));
+  const totalPages = perPage > 0 ? Math.ceil(totalItems / perPage) : 0;
+  const hasNextPage = page < totalPages;
+  const hasPreviousPage = page > 1;
 
-  const goToPage = (p: number) =>
-    setPage(() => Math.max(1, Math.min(p, totalPages)));
-
-  const changePerPage = (newPerPage: number) => {
-    setPerPage(newPerPage);
-  };
-
-  return {
-    tasks: tasksResponse.tasks,
+  const metadata: PaginationMetadata = {
     currentPage: page,
     perPage,
     totalPages,
-    totalItems: tasksResponse.total,
+    totalItems,
+    hasNextPage,
+    hasPreviousPage,
+  };
+
+  return {
+    tasks,
+    metadata,
     isLoading,
     isError,
-    hasNextPage: page < totalPages,
-    hasPrevPage: page > 1,
-    goToNextPage,
-    goToPrevPage,
-    setPage: goToPage,
-    changePerPage,
   };
 };

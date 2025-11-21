@@ -1,9 +1,9 @@
 import { PaginationControls } from "@/components/PaginationControls.tsx";
 import { useDeleteTask } from "@/shared/hook/useReactQuery.ts";
-import { useTaskFilters } from "@/shared/hook/useTaskFilters.ts";
-import { useTaskPagination } from "@/shared/hook/useTaskPagination.ts";
+import { useTaskPaginationLogic } from "@/shared/hook/useTaskPaginationLogic.ts";
+import { useTaskUrlParams } from "@/shared/hook/useTaskUrlParams.ts";
 import { ITask } from "@/shared/interface/interface.js";
-import { FunctionComponent, useCallback, useEffect } from "react";
+import { FunctionComponent, useEffect } from "react";
 import { TaskFilter } from "./TaskFilter.tsx";
 import { TaskItem } from "./TaskItem.tsx";
 
@@ -15,49 +15,22 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
   const { mutate: deleteTask } = useDeleteTask();
 
   const {
-    tasks: paginatedTasks,
-    currentPage,
-    perPage,
-    isLoading,
-    isError,
-    totalPages,
-    goToNextPage,
-    hasPrevPage,
-    goToPrevPage,
-    setPage,
+    params,
+    goToPage,
     changePerPage,
-  } = useTaskPagination();
+    setStatusFilter,
+    setPriorityFilter,
+  } = useTaskUrlParams();
 
-  const { statusFilter, setStatusFilter, priorityFilter, setPriorityFilter } =
-    useTaskFilters();
+  const { tasks, metadata, isLoading, isError } = useTaskPaginationLogic(params);
 
-  const data: ITask[] = paginatedTasks || [];
-  const tasks = data?.length > 0 ? data : [];
-
-  const filteredTasks = tasks.filter((task) => {
-    const statusMatch = statusFilter === "ALL" || task.status === statusFilter;
-    const priorityMatch =
-      priorityFilter === "ALL" || task.priority === priorityFilter;
-    return statusMatch && priorityMatch;
-  });
-
-  const handlePageChange = useCallback(
-    (newPage: number) => {
-      if (newPage > currentPage) goToNextPage();
-      else if (newPage < currentPage) goToPrevPage();
-    },
-    [currentPage, goToNextPage, goToPrevPage]
-  );
+  const { currentPage, totalPages } = metadata;
 
   useEffect(() => {
-    if (currentPage > totalPages) {
-      goToPrevPage();
-    } else if (currentPage < totalPages) {
-      goToNextPage();
-    } else {
-      setPage(currentPage);
+    if (totalPages > 0 && currentPage > totalPages) {
+      goToPage(totalPages);
     }
-  }, [totalPages]);
+  }, [totalPages, currentPage, goToPage]);
 
   if (isLoading) {
     return (
@@ -89,16 +62,18 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
     );
   }
 
+  const hasNoTasks = tasks.length === 0;
+
   return (
     <div className="flex flex-col h-full">
       <TaskFilter
-        statusFilter={statusFilter}
-        priorityFilter={priorityFilter}
+        statusFilter={params.status}
+        priorityFilter={params.priority}
         onStatusChange={setStatusFilter}
         onPriorityChange={setPriorityFilter}
       />
 
-      {filteredTasks.length === 0 && (
+      {hasNoTasks && (
         <div className="flex-1 p-8 text-center flex flex-col items-center justify-center">
           <img
             src="https://cdn-icons-png.flaticon.com/512/5058/5058432.png"
@@ -111,10 +86,10 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
         </div>
       )}
 
-      {filteredTasks.length > 0 && (
+      {!hasNoTasks && (
         <div className="flex-1 overflow-y-auto">
           <ul className="divide-y divide-gray-200 dark:divide-gray-700">
-            {filteredTasks.map((task) => (
+            {tasks.map((task) => (
               <TaskItem
                 key={task.id}
                 task={task}
@@ -127,10 +102,11 @@ export const TaskList: FunctionComponent<TaskListProps> = ({ onEdit }) => {
       )}
 
       <PaginationControls
-        currentPage={currentPage}
-        perPage={perPage}
-        totalPages={totalPages}
-        onPageChange={handlePageChange}
+        currentPage={metadata.currentPage}
+        perPage={metadata.perPage}
+        totalPages={metadata.totalPages}
+        onNextPage={() => goToPage(currentPage + 1)}
+        onPrevPage={() => goToPage(currentPage - 1)}
         onPerPageChange={changePerPage}
       />
     </div>

@@ -5,8 +5,9 @@ type PaginationControlsProps = {
   currentPage: number;
   perPage: number;
   totalPages: number;
-  onPageChange: (page: number) => void;
   onPerPageChange: (perPage: number) => void;
+  onNextPage: () => void;
+  onPrevPage: () => void;
 };
 
 const perPageOptions = [5, 10, 15, 20] as const;
@@ -15,14 +16,12 @@ export const PaginationControls: FunctionComponent<PaginationControlsProps> = ({
   currentPage,
   perPage,
   totalPages,
-  onPageChange,
   onPerPageChange,
+  onNextPage,
+  onPrevPage,
 }) => {
   const hasPrevPage = currentPage > 1;
   const hasNextPage = currentPage < totalPages;
-
-  const handlePrevPage = () => onPageChange(currentPage - 1);
-  const handleNextPage = () => onPageChange(currentPage + 1);
 
   return (
     <div className="flex flex-wrap items-center gap-4 px-6 py-4">
@@ -30,7 +29,7 @@ export const PaginationControls: FunctionComponent<PaginationControlsProps> = ({
 
       <div className="flex items-center gap-3 mx-auto">
         <button
-          onClick={handlePrevPage}
+          onClick={onPrevPage}
           disabled={!hasPrevPage}
           className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-xl transition-colors ${
             !hasPrevPage
@@ -47,7 +46,7 @@ export const PaginationControls: FunctionComponent<PaginationControlsProps> = ({
         </span>
 
         <button
-          onClick={handleNextPage}
+          onClick={onNextPage}
           disabled={!hasNextPage}
           className={`flex items-center gap-1 px-3 py-1.5 text-xs rounded-xl transition-colors ${
             !hasNextPage

@@ -23,11 +23,11 @@ type UseTaskPaginationReturn = {
   changePerPage: (perPage: number) => void;
 };
 
-export const useTaskPagination = (): UseTaskPaginationReturn => {
+export const useTaskPagination = (filters?: { status?: string; priority?: string }): UseTaskPaginationReturn => {
   const [page, setPage] = useState<number>(pagination.page);
   const [perPage, setPerPage] = useState<number>(pagination.perPage);
 
-  const { data, isLoading, isError } = useTaskPaginated(page, perPage);
+  const { data, isLoading, isError } = useTaskPaginated(page, perPage, filters);
 
   const tasksResponse: ITaskPaginatedResponse = data || {
     tasks: [],
@@ -46,7 +46,6 @@ export const useTaskPagination = (): UseTaskPaginationReturn => {
 
   const changePerPage = (newPerPage: number) => {
     setPerPage(newPerPage);
-    setPage(pagination.page);
   };
 
   return {

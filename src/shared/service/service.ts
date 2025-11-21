@@ -58,13 +58,19 @@ export class TaskService {
     try {
       const params = new URLSearchParams({
         _page: page.toString(),
-        _limit: limit.toString(),
-        ...(filters?.status && { status: filters.status }),
-        ...(filters?.priority && { priority: filters.priority }),
+        _per_page: limit.toString(), // Use correct param name directly
       });
 
-      const replacedParams = params.toString().replace("_limit", "_per_page");
-      const response = await fetch(`${this.BASE_URL}?${replacedParams}`, {
+      // Add filters only if they have values
+      if (filters?.status) {
+        params.set("status", filters.status);
+      }
+
+      if (filters?.priority) {
+        params.set("priority", filters.priority);
+      }
+
+      const response = await fetch(`${this.BASE_URL}?${params.toString()}`, {
         method: "GET",
         headers: this.headers,
       });

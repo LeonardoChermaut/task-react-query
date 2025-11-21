@@ -15,8 +15,11 @@ import { taskService } from "../service/service.ts";
 export const queryKeys = {
   tasks: {
     all: ["tasks"] as const,
-    paginated: (page: number, limit: number) =>
-      [...queryKeys.tasks.all, "paginated", page, limit] as const,
+    paginated: (
+      page: number,
+      limit: number,
+      filters?: { status?: string; priority?: string }
+    ) => [...queryKeys.tasks.all, "paginated", page, limit, filters] as const,
   },
 };
 
@@ -26,7 +29,7 @@ export const useTaskPaginated = (
   filters?: { status?: string; priority?: string }
 ) => {
   return useQuery({
-    queryKey: queryKeys.tasks.paginated(page, limit),
+    queryKey: queryKeys.tasks.paginated(page, limit, filters),
     queryFn: () => taskService.getPaginated(page, limit, filters),
     placeholderData: keepPreviousData,
   });
